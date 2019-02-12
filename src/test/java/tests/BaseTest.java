@@ -16,13 +16,12 @@ public class BaseTest {
             WebDriverManager.chromedriver().setup();
             driver = new ChromeDriver();
             driver.manage().window().maximize();
-
       }
 
         @AfterClass
         public void teardown () {
             if(driver != null){
-            //    driver.quit();
+                driver.quit();
             }
         }
 }
