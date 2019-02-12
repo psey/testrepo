@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SearchPage extends BasePage {
-    
+
     By inputMaxPriceFilterValue = By.id("price[max]");
     By submitPriceButtonId = By.id("submitprice");
     By searchLoaderXPath = By.xpath("//div[@class = 'progress-b progress-b-fixed']");
@@ -25,28 +25,24 @@ public class SearchPage extends BasePage {
         super(driver);
     }
 
-    public SearchPage setPriceForSearch(int price)
-    {
+    public SearchPage setPriceForSearch(int price) {
         writeText(inputMaxPriceFilterValue, String.valueOf(price));
         click(submitPriceButtonId);
         return this;
     }
 
-    public SearchPage waitForLoader()
-    {
+    public SearchPage waitForLoader() {
         waitInvisibility(searchLoaderXPath);
         foundItemsPrices = driver.findElements(foundItemPriceXPath);
         return this;
     }
 
-    public boolean isAsusChecked()
-    {
+    public boolean isAsusChecked() {
         return checkedChbox(chboxForAsusNotebookInTheFilterMenuXPath);
     }
 
 
-    public int getFoundItemsCount()
-    {
+    public int getFoundItemsCount() {
         return getElementsCount(foundItemsXPath);
     }
 
@@ -71,14 +67,13 @@ public class SearchPage extends BasePage {
 
     }
 
-    public int parseFoundNumberOfItems()
-    {
+    public int parseFoundNumberOfItems() {
         return parseFirstNumber(ItemsFoundTextClassName);
     }
 
     // Парсит стоимость из строки типа "10 000 грн"
     public int parseItemPrice(String price) {
-        String filteredPrice = price.replaceAll("[^0-9]","");
+        String filteredPrice = price.replaceAll("[^0-9]", "");
         return parseFirstNumber(filteredPrice);
     }
 
@@ -95,11 +90,9 @@ public class SearchPage extends BasePage {
 
     }
 
-    public boolean verifyPriceForAllElements(int price)
-    {
+    public boolean verifyPriceForAllElements(int price) {
         return pricesAreValid(foundItemsPrices, price);
     }
-
 
 
     public void getNthItem(By elementBy, int n) {
@@ -107,24 +100,16 @@ public class SearchPage extends BasePage {
     }
 
 
-
-    public ProductPage clickToFirstElem()
-    {
+    public ProductPage clickToFirstElem() {
         getNthItem(foundItemsXPath, 0);
         driver.getCurrentUrl();
         try {
             final Random random = new Random();
-            takeSnapShot(driver, screenshotSavePath + "screen+" + random.nextInt() + ".png") ;
+            takeAndSaveSnapShot(driver, screenshotSavePath + "screen+" + random.nextInt() + ".png");
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ProductPage(driver);
 
     }
-
-
-
-
-
-
 }

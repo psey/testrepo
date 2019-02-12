@@ -13,14 +13,13 @@ public abstract class BasePage {
     public WebDriver driver;
     public WebDriverWait wait;
 
-
     public BasePage(WebDriver driver) {
         this.driver = driver;
         wait = new WebDriverWait(driver, 10);
-        driver.manag//e().deleteAllCookies();
+        // driver.manag//e().deleteAllCookies();
     }
 
-    public static void takeSnap//Shot(WebDriver webdriver, String fileWithPath) throws Exception {
+    public static void takeAndSaveSnapShot(WebDriver webdriver, String fileWithPath) throws Exception {
         //Convert web driver object to TakeScreenshot
         TakesScreenshot scrShot = ((TakesScreenshot) webdriver);
         //Call getScreenshotAs method to create image file
@@ -51,7 +50,6 @@ public abstract class BasePage {
         return driver.findElement(elementBy).getText();
     }
 
-
     public int getElementsCount(By elementBy) {
         return driver.findElements(elementBy).size();
     }
@@ -64,13 +62,16 @@ public abstract class BasePage {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(elementBy));
     }
 
-
-    public void //setCookie(String name, String value) {
+    public void deleteAllCookies() {
         driver.manage().deleteAllCookies();
-        Cookie ck = new Cookie(name, value);
-        driver.manage().addCookie(ck);
-        driver.navigate().refresh();
     }
 
+    public void setCookie(String name, String value) {
+        Cookie ck = new Cookie(name, value);
+        driver.manage().addCookie(ck);
+    }
 
+    public void refreshPage() {
+        driver.navigate().refresh();
+    }
 }
