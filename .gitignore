@@ -1,0 +1,5 @@
+.idea
+allure-results
+src/main/screen
+target
+.allure
