@@ -19,6 +19,10 @@ public abstract class BasePage {
         // driver.manag//e().deleteAllCookies();
     }
 
+    public BasePage() {
+
+    }
+
     public static void takeAndSaveSnapShot(WebDriver webdriver, String fileWithPath) throws Exception {
         //Convert web driver object to TakeScreenshot
         TakesScreenshot scrShot = ((TakesScreenshot) webdriver);

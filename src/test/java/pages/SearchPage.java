@@ -112,4 +112,24 @@ public class SearchPage extends BasePage {
         return new ProductPage(driver);
 
     }
+// НЕ РАБОТАЕТ
+    public boolean brandnameIsValid(HomePage homePage, List<WebElement> foundBrandName)
+    {
+        String currentBrand = homePage.getBrandName();
+        System.out.println("Current brand is" + currentBrand);
+
+        for (WebElement item: foundBrandName)
+        {
+            String brandText = item.getText();
+            System.out.println("curr brand in for " + currentBrand);
+            System.out.println("Brand is " + brandText);
+            System.out.println("item is selected" + item.isSelected());
+            if (brandText.equals(currentBrand) && item.isSelected()){
+
+                return true; // ДОПИСАТЬ НА ЧЕК
+            }
+        }
+
+        return true;
+    }
 }
