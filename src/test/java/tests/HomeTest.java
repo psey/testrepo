@@ -8,6 +8,7 @@ import pages.HomePage;
 import pages.ProductPage;
 import pages.SearchPage;
 
+
 public class HomeTest extends BaseTest {
 
     By countOfPhotoOnPhotoTabInProductPage = By.xpath("//div[@class ='pp-photo-tab-i-img']");
@@ -29,25 +30,33 @@ public class HomeTest extends BaseTest {
         HomePage homePage = new HomePage(driver);
         homePage.goToHomePage().setABTest(abTestCookieName, abTestCookieValue);
 
-        SearchPage searchPage = homePage.searchNotebook()
+        SearchPage searchPage = homePage.searchNotebook("ноутбук", "Asus")
                 .setPriceForSearch(price)
                 .waitForLoader();
 
-        boolean isAsusChecked = searchPage.isAsusChecked();
-
-        // SearchPage searchPage = new SearchPage(driver);
-        //SearchPage searchPage = homePage.searchNotebook();
+      //  driver.manage().timeouts().implicitlyWait(10000, TimeUnit.SECONDS);
+     /*   driver.findElement(By.cssSelector("ul#sort_producer>li:nth-child(5)")).click();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        */
+        searchPage.initCheckboxesOfProducts();
+        searchPage.getProductInTheFilter();
+        System.out.println(searchPage.vendorsAreCheckedCorrect());
 
         searchPage.verifyPriceForAllElements(price);
 
-        softAssert.assertEquals(isAsusChecked, true, "Checkbox Asus is checked");
-        softAssert.assertEquals(searchPage.parseFoundNumberOfItems(), searchPage.getFoundItemsCount(), "Filter counter is equal count of element");
+       softAssert.assertEquals(searchPage.vendorsAreCheckedCorrect(), true, "Checkbox for brand name is checked");
+       softAssert.assertEquals(searchPage.parseFoundNumberOfItems(), searchPage.getFoundItemsCount(), "Filter counter is equal count of element");
 
         ProductPage productPage = searchPage.clickToFirstElem();
 
         productPage.clickOnPhotoTab();
         productPage.waitForPhotoTabIsActive();
-        softAssert.assertEquals(productPage.getElementsCount(countOfPhotoOnProductPage), productPage.getElementsCount(countOfPhotoOnPhotoTabInProductPage), " count of photos in product tab === count of photos in photo tab ? ");
+        softAssert.assertEquals(productPage.getNumbersOfElements(countOfPhotoOnProductPage), productPage.getNumbersOfElements(countOfPhotoOnPhotoTabInProductPage), " count of photos in product tab === count of photos in photo tab ? ");
         productPage.waitForBtnTopPurchaseIsPresent();
+
     }
 }

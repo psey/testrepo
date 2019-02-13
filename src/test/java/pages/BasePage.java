@@ -16,7 +16,10 @@ public abstract class BasePage {
     public BasePage(WebDriver driver) {
         this.driver = driver;
         wait = new WebDriverWait(driver, 10);
-        // driver.manag//e().deleteAllCookies();
+    }
+
+    public BasePage() {
+
     }
 
     public static void takeAndSaveSnapShot(WebDriver webdriver, String fileWithPath) throws Exception {
@@ -50,7 +53,7 @@ public abstract class BasePage {
         return driver.findElement(elementBy).getText();
     }
 
-    public int getElementsCount(By elementBy) {
+    public int getNumbersOfElements(By elementBy) {
         return driver.findElements(elementBy).size();
     }
 
