@@ -8,7 +8,7 @@ public class HomePage extends BasePage {
     String baseURL = "https://rozetka.com.ua/";
     By inputMainSearch = By.xpath("//input[@name='search']");
     By btnSearchSubmit = By.xpath("//button[@type='submit']");
-    String brandName;
+
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -32,23 +32,13 @@ public class HomePage extends BasePage {
     }
 
     public SearchPage searchNotebook(String category, String brand) {
-        writeText(inputMainSearch, category + " " + brand );
-        setBrandName(brand);
+        writeText(inputMainSearch, category + " " + brand);
         click(btnSearchSubmit);
-        System.out.println("Setted brandNme is " + brandName);
-        System.out.println("Getter" + getBrandName());
-        return new SearchPage(driver);
+        SearchPage result = new SearchPage(driver);
+        result.setBrandName(brand);
+        return result;
 
     }
-
-    public void setBrandName(String brandName) {
-        this.brandName = brandName;
-    }
-
-    public String getBrandName(){
-        return brandName;
-    }
-
 
 
 }

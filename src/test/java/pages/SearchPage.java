@@ -3,7 +3,9 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import pages.entities.Vendor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -20,9 +22,23 @@ public class SearchPage extends BasePage {
     By foundItemsXPath = By.xpath("//div[@class = 'g-i-tile g-i-tile-catalog']");
     List<WebElement> foundItemsPrices;
     String screenshotSavePath = "/Users/marynaivanova/IdeaProjects/comrozetkauablah/src/main/screen/";
+    String brandName;
+    List<String> listOfBrandsInBrandFilter;
+    List<String> checkboxListInTheFilter;
+    List<Vendor> checkboxPlusBrand;
+
+
 
     public SearchPage(WebDriver driver) {
         super(driver);
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getBrandName(){
+        return brandName;
     }
 
     public SearchPage setPriceForSearch(int price) {
@@ -43,7 +59,7 @@ public class SearchPage extends BasePage {
 
 
     public int getFoundItemsCount() {
-        return getElementsCount(foundItemsXPath);
+        return getNumbersOfElements(foundItemsXPath);
     }
 
 
@@ -112,24 +128,72 @@ public class SearchPage extends BasePage {
         return new ProductPage(driver);
 
     }
-// НЕ РАБОТАЕТ
-    public boolean brandnameIsValid(HomePage homePage, List<WebElement> foundBrandName)
-    {
-        String currentBrand = homePage.getBrandName();
-        System.out.println("Current brand is" + currentBrand);
 
-        for (WebElement item: foundBrandName)
+    public boolean brandnameIsValid(List<WebElement> foundBrandName)
+    {
+        String currentBrand = getBrandName();
+
+        for (WebElement item:foundBrandName)
         {
             String brandText = item.getText();
-            System.out.println("curr brand in for " + currentBrand);
             System.out.println("Brand is " + brandText);
-            System.out.println("item is selected" + item.isSelected());
-            if (brandText.equals(currentBrand) && item.isSelected()){
+            System.out.println("item is " + item);
+            if (! brandText.equals(currentBrand)){
+                //(!brandText.equals(currentBrand) || !item.isSelected())
 
-                return true; // ДОПИСАТЬ НА ЧЕК
+                return false;
             }
         }
 
         return true;
     }
+
+//НЕПРАВИЛЬНО переделать
+    public void initCheckboxesOfProducts() {
+        By listOfBrKolbasa = By.cssSelector("ul#sort_producer label.filter-parametrs-i-l-i-label");
+        By listOfCheckboxesValuesInBrandFilter = By.cssSelector("ul#sort_producer label.filter-parametrs-i-l-i-label>input");
+        By listOfBrandValuesInTheBrandFilter = By.xpath("//ul[@id ='sort_producer']//i[@class = 'filter-parametrs-i-l-i-default-title']");
+        checkboxListInTheFilter = new ArrayList<String>();
+        listOfBrandsInBrandFilter = new ArrayList<String>();
+
+        //
+        for (int i = 0; i < getNumbersOfElements(listOfBrKolbasa); i++) {
+           String chbox = driver.findElements(listOfCheckboxesValuesInBrandFilter).get(i).getAttribute("checked");
+            checkboxListInTheFilter.add(chbox);
+            String brName = driver.findElements(listOfBrandValuesInTheBrandFilter).get(i).getText();
+            listOfBrandsInBrandFilter.add(brName);
+        }
+
+    }
+
+
+    public void getProductInTheFilter() {
+        checkboxPlusBrand = new ArrayList<Vendor>();
+        if (checkboxListInTheFilter.size() == listOfBrandsInBrandFilter.size())
+        {
+            for(int i = 0; i < checkboxListInTheFilter.size(); i++)
+            {
+                Vendor name = new Vendor(checkboxListInTheFilter.get(i),listOfBrandsInBrandFilter.get(i));
+                checkboxPlusBrand.add(name);
+            }
+        }
+
+
+    }
+
+    public boolean vendorsAreCheckedCorrect()
+    {
+        for(int i = 0; i < checkboxPlusBrand.size(); i++)
+        {
+            Vendor vend = checkboxPlusBrand.get(i);
+            if (vend.getBrandName().equals(getBrandName()) != vend.isBrandCheckboxIsChecked())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
 }
