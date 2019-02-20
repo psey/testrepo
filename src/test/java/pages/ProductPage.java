@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -13,25 +14,24 @@ public class ProductPage extends BasePage {
         super(driver);
     }
 
+
+    @Step
     public ProductPage clickOnPhotoTab() {
         click(photoTab);
         return this;
     }
-
+    @Step
     public ProductPage waitForPhotoTabIsActive() {
         waitVisibility(isPhotoTabIsActive);
         return this;
     }
-
+    @Step
     public ProductPage waitForBtnTopPurchaseIsPresent() {
         waitVisibility(btnTopPurchase);
         return this;
     }
 }
 
-
-// проверить количество фоток на странице продукта и в галлерее совпадает
-// что быстрое меню есть на странице прдукта
 
 
 

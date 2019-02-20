@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -17,12 +18,12 @@ public class HomePage extends BasePage {
     public HomePage() {
         super();
     }
-
+    @Step
     public HomePage goToHomePage() {
         driver.get(baseURL);
         return this;
     }
-
+    @Step
     public HomePage setABTest(String name, String value) {
         deleteAllCookies();
         setCookie(name, value);
@@ -30,7 +31,7 @@ public class HomePage extends BasePage {
         return this;
 
     }
-
+    @Step
     public SearchPage searchNotebook(String category, String brand) {
         writeText(inputMainSearch, category + " " + brand);
         click(btnSearchSubmit);

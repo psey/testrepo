@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -57,7 +58,7 @@ public class SearchPage extends BasePage {
         return checkedChbox(chboxForAsusNotebookInTheFilterMenuXPath);
     }
 
-
+    @Step
     public int getFoundItemsCount() {
         return getNumbersOfElements(foundItemsXPath);
     }
@@ -105,7 +106,7 @@ public class SearchPage extends BasePage {
         return true;
 
     }
-
+    @Step
     public boolean verifyPriceForAllElements(int price) {
         return pricesAreValid(foundItemsPrices, price);
     }
@@ -115,7 +116,7 @@ public class SearchPage extends BasePage {
         driver.findElements(elementBy).get(n).click();
     }
 
-
+    @Step
     public ProductPage clickToFirstElem() {
         getNthItem(foundItemsXPath, 0);
         driver.getCurrentUrl();
@@ -149,6 +150,8 @@ public class SearchPage extends BasePage {
     }
 
 //НЕПРАВИЛЬНО переделать
+
+    @Step
     public void initCheckboxesOfProducts() {
         By listOfBrKolbasa = By.cssSelector("ul#sort_producer label.filter-parametrs-i-l-i-label");
         By listOfCheckboxesValuesInBrandFilter = By.cssSelector("ul#sort_producer label.filter-parametrs-i-l-i-label>input");
@@ -166,7 +169,7 @@ public class SearchPage extends BasePage {
 
     }
 
-
+    @Step
     public void getProductInTheFilter() {
         checkboxPlusBrand = new ArrayList<Vendor>();
         if (checkboxListInTheFilter.size() == listOfBrandsInBrandFilter.size())
@@ -180,7 +183,7 @@ public class SearchPage extends BasePage {
 
 
     }
-
+    @Step
     public boolean vendorsAreCheckedCorrect()
     {
         for(int i = 0; i < checkboxPlusBrand.size(); i++)
