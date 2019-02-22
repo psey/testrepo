@@ -44,14 +44,13 @@ public class HomeTest extends BaseTest {
         */
         searchPage.initCheckboxesOfProducts();
         searchPage.getProductInTheFilter();
-        System.out.println(searchPage.vendorsAreCheckedCorrect());
 
         searchPage.verifyPriceForAllElements(price);
 
        softAssert.assertEquals(searchPage.vendorsAreCheckedCorrect(), true, "Checkbox for brand name is checked");
        softAssert.assertEquals(searchPage.parseFoundNumberOfItems(), searchPage.getFoundItemsCount(), "Filter counter is equal count of element");
 
-        ProductPage productPage = searchPage.clickToFirstElem();
+        ProductPage productPage = searchPage.clickToFirstElemAndMakeSnapshoot();
 
         productPage.clickOnPhotoTab();
         productPage.waitForPhotoTabIsActive();

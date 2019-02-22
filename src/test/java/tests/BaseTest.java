@@ -1,21 +1,20 @@
 package tests;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import pages.entities.SetupManager;
 
 public class BaseTest {
 
         public WebDriver driver;
+        protected final SetupManager app = new SetupManager("opera");
 
         @BeforeClass
-        public void setup () {
-            //Create a Chrome driver. All test classes use this.
-            WebDriverManager.chromedriver().setup();
-            driver = new ChromeDriver();
+        public void setup() throws Exception{
+            driver = app.getBrowser();
             driver.manage().window().maximize();
+
       }
 
         @AfterClass

@@ -1,9 +1,8 @@
 package pages;
 
+import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import pages.entities.Vendor;
 
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class SearchPage extends BasePage {
 
@@ -130,6 +130,15 @@ public class SearchPage extends BasePage {
 
     }
 
+    @Step
+    public ProductPage clickToFirstElemAndMakeSnapshoot() {
+        getNthItem(foundItemsXPath, 0);
+        driver.getCurrentUrl();
+        saveScreenshot(driver);
+        return new ProductPage(driver);
+
+    }
+
     public boolean brandnameIsValid(List<WebElement> foundBrandName)
     {
         String currentBrand = getBrandName();
@@ -197,6 +206,10 @@ public class SearchPage extends BasePage {
         return true;
     }
 
+    @Attachment(value = "Attachment Screenshot", type = "image/png")
+    public  byte[] saveScreenshot(WebDriver driver) {
+       return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
 
+    }
 
 }
