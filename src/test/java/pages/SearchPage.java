@@ -8,6 +8,7 @@ import pages.entities.Vendor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +28,7 @@ public class SearchPage extends BasePage {
     List<String> listOfBrandsInBrandFilter;
     List<String> checkboxListInTheFilter;
     List<Vendor> checkboxPlusBrand;
+    private static Logger log = Logger.getLogger(SearchPage.class.getName());
 
 
 
@@ -45,12 +47,14 @@ public class SearchPage extends BasePage {
     public SearchPage setPriceForSearch(int price) {
         writeText(inputMaxPriceFilterValue, String.valueOf(price));
         click(submitPriceButtonId);
+        log.info("Set price for search in the product filter");
         return this;
     }
 
     public SearchPage waitForLoader() {
         waitInvisibility(searchLoaderXPath);
         foundItemsPrices = driver.findElements(foundItemPriceXPath);
+        log.info("Wait for page load");
         return this;
     }
 

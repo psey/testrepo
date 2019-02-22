@@ -5,6 +5,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import pages.entities.SetupManager;
 
+
 public class BaseTest {
 
         public WebDriver driver;
