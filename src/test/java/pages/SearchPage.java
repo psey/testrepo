@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 public class SearchPage extends BasePage {
 
+    private static Logger log = Logger.getLogger(SearchPage.class.getName());
     By inputMaxPriceFilterValue = By.id("price[max]");
     By submitPriceButtonId = By.id("submitprice");
     By searchLoaderXPath = By.xpath("//div[@class = 'progress-b progress-b-fixed']");
@@ -28,20 +29,18 @@ public class SearchPage extends BasePage {
     List<String> listOfBrandsInBrandFilter;
     List<String> checkboxListInTheFilter;
     List<Vendor> checkboxPlusBrand;
-    private static Logger log = Logger.getLogger(SearchPage.class.getName());
-
 
 
     public SearchPage(WebDriver driver) {
         super(driver);
     }
 
-    public void setBrandName(String brandName) {
-        this.brandName = brandName;
+    public String getBrandName() {
+        return brandName;
     }
 
-    public String getBrandName(){
-        return brandName;
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public SearchPage setPriceForSearch(int price) {
@@ -52,8 +51,8 @@ public class SearchPage extends BasePage {
     }
 
     public SearchPage waitForLoader() {
-        waitInvisibility(searchLoaderXPath);
-        foundItemsPrices = driver.findElements(foundItemPriceXPath);
+        waitInvisibility(searchLoaderXPath);//rename or rework method
+        foundItemsPrices = driver.findElements(foundItemPriceXPath);//
         log.info("Wait for page load");
         return this;
     }
@@ -110,6 +109,7 @@ public class SearchPage extends BasePage {
         return true;
 
     }
+
     @Step
     public boolean verifyPriceForAllElements(int price) {
         return pricesAreValid(foundItemsPrices, price);
@@ -143,16 +143,14 @@ public class SearchPage extends BasePage {
 
     }
 
-    public boolean brandnameIsValid(List<WebElement> foundBrandName)
-    {
+    public boolean brandnameIsValid(List<WebElement> foundBrandName) {
         String currentBrand = getBrandName();
 
-        for (WebElement item:foundBrandName)
-        {
+        for (WebElement item : foundBrandName) {
             String brandText = item.getText();
             System.out.println("Brand is " + brandText);
             System.out.println("item is " + item);
-            if (! brandText.equals(currentBrand)){
+            if (!brandText.equals(currentBrand)) {
                 //(!brandText.equals(currentBrand) || !item.isSelected())
 
                 return false;
@@ -162,19 +160,19 @@ public class SearchPage extends BasePage {
         return true;
     }
 
-//НЕПРАВИЛЬНО переделать
+// todo НЕПРАВИЛЬНО переделать
 
     @Step
-    public void initCheckboxesOfProducts() {
+    public void initCheckboxesOfProducts() { //. is under current salesforce_light_p2 initDocuments() 221
         By listOfBrKolbasa = By.cssSelector("ul#sort_producer label.filter-parametrs-i-l-i-label");
         By listOfCheckboxesValuesInBrandFilter = By.cssSelector("ul#sort_producer label.filter-parametrs-i-l-i-label>input");
         By listOfBrandValuesInTheBrandFilter = By.xpath("//ul[@id ='sort_producer']//i[@class = 'filter-parametrs-i-l-i-default-title']");
-        checkboxListInTheFilter = new ArrayList<String>();
+        checkboxListInTheFilter = new ArrayList<>();
         listOfBrandsInBrandFilter = new ArrayList<String>();
 
         //
         for (int i = 0; i < getNumbersOfElements(listOfBrKolbasa); i++) {
-           String chbox = driver.findElements(listOfCheckboxesValuesInBrandFilter).get(i).getAttribute("checked");
+            String chbox = driver.findElements(listOfCheckboxesValuesInBrandFilter).get(i).getAttribute("checked");
             checkboxListInTheFilter.add(chbox);
             String brName = driver.findElements(listOfBrandValuesInTheBrandFilter).get(i).getText();
             listOfBrandsInBrandFilter.add(brName);
@@ -184,35 +182,31 @@ public class SearchPage extends BasePage {
 
     @Step
     public void getProductInTheFilter() {
-        checkboxPlusBrand = new ArrayList<Vendor>();
-        if (checkboxListInTheFilter.size() == listOfBrandsInBrandFilter.size())
-        {
-            for(int i = 0; i < checkboxListInTheFilter.size(); i++)
-            {
-                Vendor name = new Vendor(checkboxListInTheFilter.get(i),listOfBrandsInBrandFilter.get(i));
+        checkboxPlusBrand = new ArrayList<>();
+        if (checkboxListInTheFilter.size() == listOfBrandsInBrandFilter.size()) {
+            for (int i = 0; i < checkboxListInTheFilter.size(); i++) {
+                Vendor name = new Vendor(checkboxListInTheFilter.get(i), listOfBrandsInBrandFilter.get(i));
                 checkboxPlusBrand.add(name);
             }
         }
 
 
     }
+
     @Step
-    public boolean vendorsAreCheckedCorrect()
-    {
-        for(int i = 0; i < checkboxPlusBrand.size(); i++)
-        {
+    public boolean vendorsAreCheckedCorrect() {
+        for (int i = 0; i < checkboxPlusBrand.size(); i++) {
             Vendor vend = checkboxPlusBrand.get(i);
-            if (vend.getBrandName().equals(getBrandName()) != vend.isBrandCheckboxIsChecked())
-            {
+            if (vend.getBrandName().equals(getBrandName()) != vend.isBrandCheckboxIsChecked()) {
                 return false;
             }
         }
         return true;
     }
 
-    @Attachment(value = "Attachment Screenshot", type = "image/png")
-    public  byte[] saveScreenshot(WebDriver driver) {
-       return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+    @Attachment(value = "Attachment Screenshot", type = "image/png")//todo fix name and add save to harddisk
+    public byte[] saveScreenshot(WebDriver driver) {
+        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
 
     }
 

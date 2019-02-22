@@ -13,29 +13,34 @@ import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 
 public class SetupManager {
-    private String browser;
+    private String browserType;
     private static Logger log = Logger.getLogger(SetupManager.class.getName());
 
-    public SetupManager(String browser) {
-        this.browser = browser.toUpperCase();
+    public SetupManager(String browserType) {
+        this.browserType = browserType.toUpperCase();
 
     }
 
-    public WebDriver getBrowser() {
-        if (browser.equals("CHROME")) {
-            WebDriverManager.getInstance(CHROME).setup();
-            log.info("Chrome is setup");
-            return new ChromeDriver();
-        } else if (browser.equals("OPERA")) {
-            WebDriverManager.getInstance(OPERA).setup();
-            log.info("Opera is setup");
-            return new OperaDriver();
-        } else if (browser.equals("FIREFOX")) {
-            WebDriverManager.getInstance(FIREFOX).setup();
-            log.info("FF is setup");
-            return new FirefoxDriver();
-        } else {
-        return null;
+    public WebDriver setBrowser() {
+        switch (browserType){
+            case "CHROME":
+                WebDriverManager.getInstance(CHROME).setup();
+                log.info("Chrome is setup");
+                return new ChromeDriver();
+
+            case "OPERA":
+                WebDriverManager.getInstance(OPERA).setup();
+                log.info("Opera is setup");
+                return new OperaDriver();
+
+            case "FIREFOX":
+                WebDriverManager.getInstance(FIREFOX).setup();
+                log.info("FF is setup");
+                return new FirefoxDriver();
+
+            default:
+                return null;
+
         }
     }
 }
