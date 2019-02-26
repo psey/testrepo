@@ -8,39 +8,53 @@ import org.openqa.selenium.opera.OperaDriver;
 
 import java.util.logging.Logger;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
-import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
+import static io.github.bonigarcia.wdm.DriverManagerType.*;
 
-public class SetupManager {
+public class DriverManager {
+    private static Logger log = Logger.getLogger(DriverManager.class.getName());
+    WebDriver driver;
     private String browserType;
-    private static Logger log = Logger.getLogger(SetupManager.class.getName());
 
-    public SetupManager(String browserType) {
+    public DriverManager(String browserType) {
         this.browserType = browserType.toUpperCase();
 
     }
 
-    public WebDriver setBrowser() {
-        switch (browserType){
+    public WebDriver initBrowser() {
+        switch (browserType) {
             case "CHROME":
                 WebDriverManager.getInstance(CHROME).setup();
                 log.info("Chrome is setup");
-                return new ChromeDriver();
+                driver = new ChromeDriver();
+                break;
 
             case "OPERA":
                 WebDriverManager.getInstance(OPERA).setup();
                 log.info("Opera is setup");
-                return new OperaDriver();
+                driver =  new OperaDriver();
+                break;
 
             case "FIREFOX":
                 WebDriverManager.getInstance(FIREFOX).setup();
                 log.info("FF is setup");
-                return new FirefoxDriver();
+                driver = new FirefoxDriver();
+                break;
 
             default:
                 return null;
 
+        }
+        maximizeWindow();
+        return driver;
+    }
+
+    public void maximizeWindow() {
+        driver.manage().window().maximize();
+    }
+
+    public void shutDownBrowser() {
+        if (driver != null) {
+            driver.quit();
         }
     }
 }

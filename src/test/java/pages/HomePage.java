@@ -11,6 +11,8 @@ public class HomePage extends BasePage {
     String baseURL = "https://rozetka.com.ua/";
     By inputMainSearch = By.xpath("//input[@name='search']");
     By btnSearchSubmit = By.xpath("//button[@type='submit']");
+    private String abTestCookieName = "ab_main_page";
+    private String abTestCookieValue = "new";
     private static Logger log = Logger.getLogger(HomePage.class.getName());
 
 
@@ -18,24 +20,23 @@ public class HomePage extends BasePage {
         super(driver);
     }
 
-    public HomePage() {
-        super();
-    }
     @Step
     public HomePage goToHomePage() {
         driver.get(baseURL);
         log.info("Go to URL");
         return this;
     }
+
     @Step
-    public HomePage setABTest(String name, String value) {
+    public HomePage setABTest() {
         deleteAllCookies();
-        setCookie(name, value);
+        setCookie(abTestCookieName, abTestCookieValue);
         refreshPage();
         log.info("Set AB cookie");
         return this;
 
     }
+
     @Step
     public SearchPage searchNotebook(String category, String brand) {
         writeText(inputMainSearch, category + " " + brand);
@@ -46,6 +47,5 @@ public class HomePage extends BasePage {
         return result;
 
     }
-
 
 }

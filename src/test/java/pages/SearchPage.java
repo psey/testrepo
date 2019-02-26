@@ -1,6 +1,5 @@
 package pages;
 
-import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
 import org.openqa.selenium.*;
 import pages.entities.Vendor;
@@ -19,17 +18,12 @@ public class SearchPage extends BasePage {
     By inputMaxPriceFilterValue = By.id("price[max]");
     By submitPriceButtonId = By.id("submitprice");
     By searchLoaderXPath = By.xpath("//div[@class = 'progress-b progress-b-fixed']");
-    By chboxForAsusNotebookInTheFilterMenuXPath = By.xpath("//*[@id = 'filter_producer_4']//input[@type = 'checkbox']");
     By ItemsFoundTextClassName = By.className("filter-active-i-text");
     By foundItemPriceXPath = By.xpath("//div[@class = 'g-i-tile g-i-tile-catalog']//div[@class ='g-price-uah']");
     By foundItemsXPath = By.xpath("//div[@class = 'g-i-tile g-i-tile-catalog']");
     List<WebElement> foundItemsPrices;
-    String screenshotSavePath = "/Users/marynaivanova/IdeaProjects/comrozetkauablah/src/main/screen/";
     String brandName;
-    List<String> listOfBrandsInBrandFilter;
-    List<String> checkboxListInTheFilter;
-    List<Vendor> checkboxPlusBrand;
-
+    List<Vendor> vendors;
 
     public SearchPage(WebDriver driver) {
         super(driver);
@@ -50,15 +44,11 @@ public class SearchPage extends BasePage {
         return this;
     }
 
-    public SearchPage waitForLoader() {
-        waitInvisibility(searchLoaderXPath);//rename or rework method
+    public SearchPage foundItemPrice() {
+        waitInvisibility(searchLoaderXPath);
         foundItemsPrices = driver.findElements(foundItemPriceXPath);//
         log.info("Wait for page load");
         return this;
-    }
-
-    public boolean isAsusChecked() {
-        return checkedChbox(chboxForAsusNotebookInTheFilterMenuXPath);
     }
 
     @Step
@@ -107,7 +97,6 @@ public class SearchPage extends BasePage {
                 return false;
         }
         return true;
-
     }
 
     @Step
@@ -115,99 +104,56 @@ public class SearchPage extends BasePage {
         return pricesAreValid(foundItemsPrices, price);
     }
 
-
     public void getNthItem(By elementBy, int n) {
         driver.findElements(elementBy).get(n).click();
-    }
-
-    @Step
-    public ProductPage clickToFirstElem() {
-        getNthItem(foundItemsXPath, 0);
-        driver.getCurrentUrl();
-        try {
-            final Random random = new Random();
-            takeAndSaveSnapShot(driver, screenshotSavePath + "screen+" + random.nextInt() + ".png");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ProductPage(driver);
-
     }
 
     @Step
     public ProductPage clickToFirstElemAndMakeSnapshoot() {
         getNthItem(foundItemsXPath, 0);
         driver.getCurrentUrl();
-        saveScreenshot(driver);
+        snapWhenUWant();
+
         return new ProductPage(driver);
-
-    }
-
-    public boolean brandnameIsValid(List<WebElement> foundBrandName) {
-        String currentBrand = getBrandName();
-
-        for (WebElement item : foundBrandName) {
-            String brandText = item.getText();
-            System.out.println("Brand is " + brandText);
-            System.out.println("item is " + item);
-            if (!brandText.equals(currentBrand)) {
-                //(!brandText.equals(currentBrand) || !item.isSelected())
-
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-// todo НЕПРАВИЛЬНО переделать
-
-    @Step
-    public void initCheckboxesOfProducts() { //. is under current salesforce_light_p2 initDocuments() 221
-        By listOfBrKolbasa = By.cssSelector("ul#sort_producer label.filter-parametrs-i-l-i-label");
-        By listOfCheckboxesValuesInBrandFilter = By.cssSelector("ul#sort_producer label.filter-parametrs-i-l-i-label>input");
-        By listOfBrandValuesInTheBrandFilter = By.xpath("//ul[@id ='sort_producer']//i[@class = 'filter-parametrs-i-l-i-default-title']");
-        checkboxListInTheFilter = new ArrayList<>();
-        listOfBrandsInBrandFilter = new ArrayList<String>();
-
-        //
-        for (int i = 0; i < getNumbersOfElements(listOfBrKolbasa); i++) {
-            String chbox = driver.findElements(listOfCheckboxesValuesInBrandFilter).get(i).getAttribute("checked");
-            checkboxListInTheFilter.add(chbox);
-            String brName = driver.findElements(listOfBrandValuesInTheBrandFilter).get(i).getText();
-            listOfBrandsInBrandFilter.add(brName);
-        }
-
     }
 
     @Step
-    public void getProductInTheFilter() {
-        checkboxPlusBrand = new ArrayList<>();
-        if (checkboxListInTheFilter.size() == listOfBrandsInBrandFilter.size()) {
-            for (int i = 0; i < checkboxListInTheFilter.size(); i++) {
-                Vendor name = new Vendor(checkboxListInTheFilter.get(i), listOfBrandsInBrandFilter.get(i));
-                checkboxPlusBrand.add(name);
-            }
+    public void initVendorListXPath() {
+        vendors = new ArrayList<>();
+        By listOfParentElement = By.xpath("//ul[@id='sort_producer']//label[@class = 'filter-parametrs-i-l-i-label']");
+        By listOfCheckboxesValuesInBrandFilter = By.xpath(".//input[@type = 'checkbox']");
+        By listOfBrandValuesInTheBrandFilter = By.xpath(".//i[@class = 'filter-parametrs-i-l-i-default-title']");
+        List<WebElement> listOfBrands = driver.findElements(listOfParentElement);
+
+        for (int i = 0; i < listOfBrands.size(); i++ )
+        {
+            WebElement brandItem = listOfBrands.get(i);
+            List <WebElement> brandChbox = brandItem.findElements(listOfCheckboxesValuesInBrandFilter);
+            List <WebElement> brandName = brandItem.findElements(listOfBrandValuesInTheBrandFilter);
+            Vendor currentVendor = new Vendor();
+             if (brandChbox.size() > 0){
+                 for(WebElement elem :brandChbox ){
+                     currentVendor.setBrandCheckbox(elem.getAttribute("checked"));
+                 }
+             }
+             if (brandName.size() > 0)
+             {
+                 for(WebElement elem:brandName ){
+                     currentVendor.setBrandName(elem.getText());
+                 }
+             }
+             vendors.add(currentVendor);
         }
-
-
     }
 
     @Step
-    public boolean vendorsAreCheckedCorrect() {
-        for (int i = 0; i < checkboxPlusBrand.size(); i++) {
-            Vendor vend = checkboxPlusBrand.get(i);
-            if (vend.getBrandName().equals(getBrandName()) != vend.isBrandCheckboxIsChecked()) {
+    public boolean vendorInTheFilterCheckedCorrectly() {
+        for(Vendor vendor:vendors){
+            if (vendor.getBrandName().equals(getBrandName()) != vendor.getBrandCheckbox() ){
                 return false;
             }
         }
         return true;
-    }
-
-    @Attachment(value = "Attachment Screenshot", type = "image/png")//todo fix name and add save to harddisk
-    public byte[] saveScreenshot(WebDriver driver) {
-        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-
     }
 
 }

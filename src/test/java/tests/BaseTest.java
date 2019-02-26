@@ -3,26 +3,22 @@ package tests;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import pages.entities.SetupManager;
+import pages.entities.DriverManager;
 
 
 public class BaseTest {
 
         public WebDriver driver;
-        protected final SetupManager app = new SetupManager("opera");// rename
+        protected final DriverManager app = new DriverManager("chrome");
 
         @BeforeClass
-        public void setup() throws Exception{
-            driver = app.setBrowser();
-            driver.manage().window().maximize();//move
-
-      }
+        public void setup() throws Exception {
+            driver = app.initBrowser();
+        }
 
         @AfterClass
         public void teardown () {
-            if(driver != null){ //move to driver manager
-               driver.quit();
-            }
+            app.shutDownBrowser();
         }
 }
 
